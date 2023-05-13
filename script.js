@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             "description": "How often do you travel on public transportation each week?",
             "options": {
-              "I don't use public transportation": -0.31,
+              "I don't use public transportation, I have a car": -0.31,
               "At least two times a week": 0.31
             }
           },
