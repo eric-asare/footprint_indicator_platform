@@ -1,6 +1,12 @@
 # footprint_indicator_platform
 Imagining Possibilities towards Net Zero
 
+Imagining Possibilities towards Net Zero
+
+I call it an indicator because I believe a calculator evokes a sense of accuracy that may not be achievable. An indicator, on the other hand, shows where you currently stand in a more holistic manner and gently prompts you to make changes in your lifestyle.
+
+Everything has been built from scratch, including the computation.
+
 ## Emission Data
 The emission data is stored in a JSON format, which makes it convenient to update the values using another script. This approach follows a modular design, which is a key principle in software development. It allows for easy maintenance and flexibility, making it simpler to manage and update the data as needed.
 
