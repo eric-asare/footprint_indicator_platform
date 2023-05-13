@@ -1,0 +1,32 @@
+{
+  "Electricity and Water": {
+    "Percentage": 0.346,
+    "Value": 6.7,
+    "Unit": "ton"
+  },
+  "Transport": {
+    "Percentage": 0.096,
+    "Value": 1.86,
+    "Unit": "ton"
+  },
+  "Waste": {
+    "Percentage": 0.053,
+    "Value": 1.03,
+    "Unit": "ton"
+  },
+  "Oil & Gas": {
+    "Percentage": 0.188,
+    "Value": 3.64,
+    "Unit": "ton"
+  },
+  "Industrial processes": {
+    "Percentage": 0.167,
+    "Value": 3.24,
+    "Unit": "ton"
+  },
+  "Agriculture": {
+    "Percentage": 0.021,
+    "Value": 0.4,
+    "Unit": "ton"
+  }
+}
