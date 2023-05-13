@@ -172,6 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
       currentQuestionIndex = 0; // index of the current question
       currentSectorIndex = 0; // index of the current sector
       currentSector = sectors[currentSectorIndex]; // current sector
+      numberOfQuestions = questions[currentSector].length; // number of questions in the current sector
 
       showQuestion(question);
 
@@ -222,15 +223,14 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         if (selectedOption) {
           var selectedValue = selectedOption.value;
-          console.log("Selected value:", selectedValue);
+          // console.log("Selected value:", selectedValue);
 
           
           // Update the footprint for the current sector
           originalEmmissionValue = emissionData[currentSector]["Value"];
-          numberOfQuestions = questions[currentSector].length;
           calculatedFootprintForEachSector[currentSector] +=  ((1 - selectedValue)/ numberOfQuestions) * originalEmmissionValue;
 
-          console.log( "Footprint for sector " + currentSector + ": " + calculatedFootprintForEachSector[currentSector]);
+          // console.log( "Footprint for sector " + currentSector + ": " + calculatedFootprintForEachSector[currentSector]);
 
           if (
             questions[currentSector] &&
@@ -257,6 +257,8 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
               // Survey completed
               // print the footprint for each sector
+              totalFootprint = 0;
+
               for (var sector in calculatedFootprintForEachSector) {
                 console.log(
                   "Footprint for sector " +
@@ -264,7 +266,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     ": " +
                     calculatedFootprintForEachSector[sector]
                 );
+                totalFootprint += calculatedFootprintForEachSector[sector];
               }
+
+             document.body.innerHTML = "Your carbon footprint is " + totalFootprint + "tons of CO2 per year.";
+
               alert("Survey completed!");
             }
           }
