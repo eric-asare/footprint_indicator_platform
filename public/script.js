@@ -1,4 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  // Handle form submission
+  const form = document.getElementById('myForm');
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('comment').value;
+
+    const formData = {
+      name,
+      email,
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    }
+
+    fetch('/api', options).then(response => {
+      console.log(response.body)
+    })
+
+    getData();
+
+    async function getData() {
+      const response = await fetch('/api');
+      const data = await response.json();
+      console.log(data);
+
+    }
+  });
+
+
+
+
   fetch("./sector_contributions.json")
     .then((response) => response.json())
     .then((emissionData) => {
@@ -12,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       //negative values are for options that increase the footprint, sounds counter intuitive but it is easier to calculate
       //say if the value is -0.31 , in the formula we will use (1 - (-0.31)) * originalValue which is the same as (1 + 0.31) * originalValue
-      
+
       var questions = {
         "Electricity and Water": [
           {
@@ -102,30 +141,30 @@ document.addEventListener("DOMContentLoaded", function () {
         ],
         "Industrial Processes": [
           {
-          "description": "In changing your wardrobe, what kind of clothes do you buy?",
-          "options": {
-            "One expensive cloth": 0.235,
-            "Second hand clothing": 0.31,
-            "Fast fashion": -0.31
-          }
-        },
-        {
-          "description": "How often do you order from Amazon?",
-          "options": {
-            "All the time": -0.31,
-            "Never ordered anything to be delivered home.": 0.31,
-            "Quite a few times every month.": 0.235
-          }
-        },
-        {
-          "description": "Do you have an Amazon Prime fast shipping delivery service?",
-          "options": {
-            "What is Amazon Prime?": 0.0,
-            "Yes": -0.31,
-            "No": 0.31
-          }
-        }],
-        "Agriculture": [ {
+            "description": "In changing your wardrobe, what kind of clothes do you buy?",
+            "options": {
+              "One expensive cloth": 0.235,
+              "Second hand clothing": 0.31,
+              "Fast fashion": -0.31
+            }
+          },
+          {
+            "description": "How often do you order from Amazon?",
+            "options": {
+              "All the time": -0.31,
+              "Never ordered anything to be delivered home.": 0.31,
+              "Quite a few times every month.": 0.235
+            }
+          },
+          {
+            "description": "Do you have an Amazon Prime fast shipping delivery service?",
+            "options": {
+              "What is Amazon Prime?": 0.0,
+              "Yes": -0.31,
+              "No": 0.31
+            }
+          }],
+        "Agriculture": [{
           "description": "How would you describe your diet?",
           "options": {
             "Meat in every meal": -0.31,
@@ -141,30 +180,30 @@ document.addEventListener("DOMContentLoaded", function () {
             "I don't worry about where my food comes from.": -0.31
           }
         }],
-        "Waste": [ 
+        "Waste": [
           {
-          "description": "Of the food you buy, how much is wasted and thrown away?",
-          "options": {
-            "None, not even a drop.": 0.31,
-            "0 - 10%": 0.235,
-            "More than 10%": -0.31
-          }
-        },
-        {
-          "description": "Do you own any reusable cups, plates, utensils, bottles, or containers?",
-          "options": {
-            "Yes": 0.31,
-            "No": -0.31
-          }
-        },
-        {
-          "description": "Do you recycle paper, cans, plastic, glass?",
-          "options": {
-            "Sometimes": 0.235,
-            "All the time": 0.31,
-            "Never": -0.31
-          }
-        }],
+            "description": "Of the food you buy, how much is wasted and thrown away?",
+            "options": {
+              "None, not even a drop.": 0.31,
+              "0 - 10%": 0.235,
+              "More than 10%": -0.31
+            }
+          },
+          {
+            "description": "Do you own any reusable cups, plates, utensils, bottles, or containers?",
+            "options": {
+              "Yes": 0.31,
+              "No": -0.31
+            }
+          },
+          {
+            "description": "Do you recycle paper, cans, plastic, glass?",
+            "options": {
+              "Sometimes": 0.235,
+              "All the time": 0.31,
+              "Never": -0.31
+            }
+          }],
       };
 
       var sectors = Object.keys(emissionData); // get the sectors from the emission data
@@ -225,10 +264,10 @@ document.addEventListener("DOMContentLoaded", function () {
           var selectedValue = selectedOption.value;
           // console.log("Selected value:", selectedValue);
 
-          
+
           // Update the footprint for the current sector
           originalEmmissionValue = emissionData[currentSector]["Value"];
-          calculatedFootprintForEachSector[currentSector] +=  ((1 - selectedValue)/ numberOfQuestions) * originalEmmissionValue;
+          calculatedFootprintForEachSector[currentSector] += ((1 - selectedValue) / numberOfQuestions) * originalEmmissionValue;
 
           // console.log( "Footprint for sector " + currentSector + ": " + calculatedFootprintForEachSector[currentSector]);
 
@@ -262,14 +301,14 @@ document.addEventListener("DOMContentLoaded", function () {
               for (var sector in calculatedFootprintForEachSector) {
                 console.log(
                   "Footprint for sector " +
-                    sector +
-                    ": " +
-                    calculatedFootprintForEachSector[sector]
+                  sector +
+                  ": " +
+                  calculatedFootprintForEachSector[sector]
                 );
                 totalFootprint += calculatedFootprintForEachSector[sector];
               }
 
-             document.body.innerHTML = "Your carbon footprint is " + totalFootprint + "tons of CO2 per year.";
+              document.body.innerHTML = "Your carbon footprint is " + totalFootprint + "tons of CO2 per year.";
 
               alert("Survey completed!");
             }
