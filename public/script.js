@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  // Handle form submission
+  // Handle form submission =========================================
   const form = document.getElementById('myForm');
   form.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
   });
+
+
+  // Computation of the footprint =========================================
 
   var emissionData = {
     "Electricity and Water": {
@@ -326,7 +329,12 @@ document.addEventListener("DOMContentLoaded", function () {
           // print the footprint for each sector
           totalFootprint = 0;
 
+          labels = [];
+          data = [];
+
           for (var sector in calculatedFootprintForEachSector) {
+            labels.push(sector);
+            data.push(calculatedFootprintForEachSector[sector]);
             console.log(
               "Footprint for sector " +
               sector +
@@ -336,9 +344,29 @@ document.addEventListener("DOMContentLoaded", function () {
             totalFootprint += calculatedFootprintForEachSector[sector];
           }
 
-          document.body.innerHTML = "Your carbon footprint is " + totalFootprint + "tons of CO2 per year.";
+          // Results Chartjs =========================================
 
-          alert("Survey completed!");
+          var ctx = document.getElementById("myChart").getContext('2d');
+
+          var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: labels, // Add data labels
+              datasets: [{
+                data: data, // Specify the data values array
+
+                borderColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', '#228B22', ], // Add custom color border 
+                backgroundColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896','#228B22'], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+              }]
+            },
+            options: {
+              responsive: true, // Instruct chart js to respond nicely.
+              maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+            }
+          });
+
+          // alert("Survey completed!");
         }
       }
     } else {
@@ -351,4 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("nextBtn")
     .addEventListener("click", nextQuestion);
+
+
+
 });

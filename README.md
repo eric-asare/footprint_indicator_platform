@@ -51,3 +51,9 @@ This is how the questions weighting look like
           }
         ]
 ```
+
+## Resources USED
+* Chartjs -  https://www.chartjs.org/
+* Database to store reviews - https://www.npmjs.com/package/nedb
+* Hosting - https://glitch.com/
+* Tech Stack - Nodejs, Express, NeDB
