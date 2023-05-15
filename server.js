@@ -9,6 +9,7 @@ const Datastore = require("nedb");
 const database = new Datastore("database.db");
 database.loadDatabase();
 
+
 app.get('/api', (request, response) => {
     // database find
     database.find({}, function (err, output) {
@@ -17,7 +18,6 @@ app.get('/api', (request, response) => {
         }
         response.json(output);
     });
-
 });
 
 app.post('/api', (request, response) => {
@@ -30,9 +30,13 @@ app.post('/api', (request, response) => {
     response.json(data);
 });
 
+// Catch-all route for serving the HTML file
+app.get('*', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 const PORT = process.env.PORT || 5050;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-})
+});
