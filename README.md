@@ -1,6 +1,8 @@
 # footprint_indicator_platform
 Imagining Possibilities towards Net Zero
 
+Live link : https://footprint-indicator.glitch.me/
+
 Imagining Possibilities towards Net Zero
 
 I call it an indicator because I believe a calculator evokes a sense of accuracy that may not be achievable. An indicator, on the other hand, shows where you currently stand in a more holistic manner and gently prompts you to make changes in your lifestyle.
