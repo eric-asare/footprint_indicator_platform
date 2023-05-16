@@ -1,12 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Bar Chart with Gradient Colors</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>This is a test</h1>
+  <canvas id="myChart"></canvas>
+
+  <script>
+    // Data and labels
+   
+
+    // Create gradient colors
+    const gradientColors = [];
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+
+    const maxColor = "rgba(255, 0, 0, 1)"; // Red for highest value
+    const minColor = "rgba(0, 255, 0, 1)"; // Green for lowest value
+
+    const gradientStep = (max - min) / (data.length - 1);
+
+    for (let i = 0; i < data.length; i++) {
+      const normalizedValue = (data[i] - min) / (max - min);
+      const r = Math.floor((1 - normalizedValue) * 255);
+      const g = Math.floor(normalizedValue * 255);
+      const color = `rgba(${r}, ${g}, 0, 1)`;
+
+      gradientColors.push(color);
+    }
+
+    // Create chart
+    const ctx = document.getElementById("myChart").getContext("2d");
+    const myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: gradientColors,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "Emissions per Capita",
+            },
+          },
+        },
+      },
+    });
+  </script>
 </body>
 </html>

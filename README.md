@@ -53,7 +53,15 @@ This is how the questions weighting look like
 ```
 
 ## Resources USED
+### Tech
 * Chartjs -  https://www.chartjs.org/
 * Database to store reviews - https://www.npmjs.com/package/nedb
 * Hosting - https://glitch.com/
 * Tech Stack - Nodejs, Express, NeDB
+
+### Emission Data
+* Emissions Ranking Worldometer - https://www.worldometers.info/co2-emissions/
+
+* Our World in Data , Co2 emissions - https://ourworldindata.org/co2-emissions
+
+* Co2 emissions ( metric tons per capita ) - https://data.worldbank.org/indicator/EN.ATM.CO2E.PC

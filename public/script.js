@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Hide Pledge List
+  document.getElementById("pledges").style.display = "none";
+
+  // Hide the results page
+  document.getElementById("resultsPage").style.display = "none";
 
   // Handle form submission =========================================
   const form = document.getElementById('myForm');
@@ -30,6 +35,25 @@ document.addEventListener("DOMContentLoaded", function () {
     async function getData() {
       const response = await fetch('/api');
       const data = await response.json();
+
+      // show the on the html pages
+      document.getElementById("pledges").style.display = "block";
+      document.getElementById("pledges").innerHTML = "";
+
+      for (item of data) {
+        const root = document.createElement('p');
+        const name = document.createElement('div');
+        const email = document.createElement('div');
+        const date = document.createElement('div');
+
+        name.textContent = `Name: ${item.name}`;
+        email.textContent = `Pledge: ${item.email}`;
+        date.textContent = `Date: ${item.timestamp}`;
+
+        root.append(name, email, date);
+        document.getElementById("pledges").append(root);
+      }
+
       console.log(data);
 
     }
@@ -345,6 +369,9 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           // Results Chartjs =========================================
+          //show total footprint
+          document.getElementById("resultsPage").style.display = "block";
+          document.getElementById("totalFootprint").innerHTML = 'Your footprint is:' + totalFootprint.toFixed(2) + " ton CO2e";
 
           var ctx = document.getElementById("myChart").getContext('2d');
 

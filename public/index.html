@@ -10,7 +10,8 @@
 </head>
 <body>
     <div id="questionContainer">
-        <h1>Survey</h1>
+        <h1>Footprint Indicator</h1>
+         <p>Answer the questions below to know your carbon footprint!</p>
         <h2 id="sectorName">Sector</h2>
         <h3 id="questionsLeftForSector">Questions left for sector</h3>
         <div id="question"></div>
@@ -21,24 +22,34 @@
 
       <section id="resultsPage">
         <h1>Results</h1>
+       
+        <div id="resultsContainer">
+            <p>Here are your results!</p>
+            <div id="totalFootprint"></div>
+        </div>
+        <p>Distribution : Hover to see amount!</p>
         <div id="results">
             <canvas width="500" id="myChart"></canvas>
         </div>
-        <button id="restartBtn">Restart</button>
+        <!-- <button id="restartBtn">Restart</button> -->
       </section>
       
       <!--Pledge Submission-->
-      <h1>Submit Form</h1>
+      <h1>Submit a Pledge towards Net Zero Today !</h1>
       <form id="myForm">
           <label for="name">Name:</label>
           <input type="text" id="name" name="name" required />
   
-          <label for="comment">Comment:</label>
+          <label for="comment">Pledge:</label>
           <input type="text" id="comment" name="comment" required />
   
           <button type="submit">Submit</button>
       </form>
   
-      <button onclick="handleButtonClick()">Read</button>
+        <div id="pledges">
+            <h2>Pledges</h2>
+            <ul id="list"></ul>
+        </div>
+      <!-- <button onclick="handleButtonClick()">Read</button> -->
 </body>
 </html>
