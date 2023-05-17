@@ -51,13 +51,18 @@ This is how the questions weighting look like
           }
         ]
 ```
+## Reasons behinds colour choices
 
 ## Resources USED
 ### Tech
 * Chartjs -  https://www.chartjs.org/
 * Database to store reviews - https://www.npmjs.com/package/nedb
 * Hosting - https://glitch.com/
+* html2canvas -https://www.npmjs.com/package/html2canvas
+* jsPDF - https://www.npmjs.com/package/jspdf
 * Tech Stack - Nodejs, Express, NeDB
+* Footprint Image : https://www.pngegg.com/en/png-bcaeh
+* Unsplash - nature images used on the pledges page - https://unsplash.com/
 
 ### Emission Data
 * Emissions Ranking Worldometer - https://www.worldometers.info/co2-emissions/

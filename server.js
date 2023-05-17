@@ -23,8 +23,10 @@ app.get('/api', (request, response) => {
 app.post('/api', (request, response) => {
     const data = request.body;
     const timestamp = Date.now();
+    const date = new Date(timestamp);
+    const dateString = date.toDateString();
 
-    data.timestamp = timestamp;
+    data.timestamp = dateString;
 
     database.insert(data);
     response.json(data);

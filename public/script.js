@@ -1,9 +1,41 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Hide Pledge List
-  document.getElementById("pledges").style.display = "none";
 
-  // Hide the results page
+document.addEventListener("DOMContentLoaded", function () {
+
+
+  // Hide Pledge List
+  document.getElementById("pledgeSection").style.display = "none";
+  document.getElementById("learnMoreSection").style.display = "none";
   document.getElementById("resultsPage").style.display = "none";
+  document.getElementById("aboutSection").style.display = "none";
+
+  // listen for nav bar click
+  document.getElementById('hamburger').addEventListener('click', () => {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+      x.className += " responsive";
+    } else {
+      x.className = "topnav";
+    }
+  })
+
+  // Download Results =======================================================
+  window.jsPDF = window.jspdf.jsPDF;
+  document.querySelector('#downloadResultsBtn').addEventListener('click', function () {
+    var element = document.querySelector('#resultsPage');
+    var docPDF = new jsPDF();
+    // Capture the content of the element as an image
+    docPDF.html(element, {
+      callback: function (docPDF) {
+        docPDF.save('myFootprint.pdf');
+      },
+      x: 15,
+      y: 15,
+      width: 170,
+      windowWidth: 650
+    });
+
+  });
+
 
   // Handle form submission =========================================
   const form = document.getElementById('myForm');
@@ -11,11 +43,11 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
 
     const name = document.getElementById('name').value;
-    const email = document.getElementById('comment').value;
+    const pledgeSubmitted = document.getElementById('comment').value;
 
     const formData = {
       name,
-      email,
+      pledgeSubmitted,
     };
 
     const options = {
@@ -32,31 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     getData();
 
-    async function getData() {
-      const response = await fetch('/api');
-      const data = await response.json();
 
-      // show the on the html pages
-      document.getElementById("pledges").style.display = "block";
-      document.getElementById("pledges").innerHTML = "";
-
-      for (item of data) {
-        const root = document.createElement('p');
-        const name = document.createElement('div');
-        const email = document.createElement('div');
-        const date = document.createElement('div');
-
-        name.textContent = `Name: ${item.name}`;
-        email.textContent = `Pledge: ${item.email}`;
-        date.textContent = `Date: ${item.timestamp}`;
-
-        root.append(name, email, date);
-        document.getElementById("pledges").append(root);
-      }
-
-      console.log(data);
-
-    }
   });
 
 
@@ -128,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "description": "How hot do you like your shower?",
         "options": {
           "49 degree celsius": 0.235,
-          "I don't really know, I use the default (60 C)": -0.31,
+          "I don't really know, maybe 60 degree celcius": -0.31,
           "25 degree celsius": 0.31
         }
       },
@@ -152,10 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
       {
         "description": "How do you usually travel?",
         "options": {
-          "by public bus": 0.235,
-          "by taxi or personal car": -0.31,
-          "by metro": 0.235,
-          "by bike": 0.31,
+          "By public bus": 0.235,
+          "By taxi or personal car": -0.31,
+          "By metro": 0.235,
+          "By bike": 0.31,
           "I walk": 0.31
         }
       },
@@ -270,6 +278,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   showQuestion(question);
 
+  // restart if button is clicked. 
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    restart();
+  })
+
+  
+  document.getElementById('home').addEventListener('click', () => {
+    restart();
+  })
+
+
+
+  function restart(){
+    var distributionChartCanvas = document.getElementById('distributionChart');
+    var horizontalBarChartCanvas = document.getElementById('horizontalBarChartCanvas')
+    var distributionChartExist = Chart.getChart(distributionChartCanvas);
+    var horizontalBarChartExist = Chart.getChart(horizontalBarChartCanvas);
+    if (distributionChartExist) {
+      distributionChartExist.destroy();
+    }
+
+    if (horizontalBarChartExist) {
+      horizontalBarChartExist.destroy();
+    }
+
+    window.location.href = "index.html";
+  }
+
   // function to show the question and options
   function showQuestion() {
     document.getElementById("sectorName").textContent = currentSector; // Show the sector name
@@ -350,6 +386,9 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         } else {
           // Survey completed
+
+          // Hide Quiz Container
+          document.getElementById('questionContainer').style.display = 'None';
           // print the footprint for each sector
           totalFootprint = 0;
 
@@ -371,19 +410,20 @@ document.addEventListener("DOMContentLoaded", function () {
           // Results Chartjs =========================================
           //show total footprint
           document.getElementById("resultsPage").style.display = "block";
-          document.getElementById("totalFootprint").innerHTML = 'Your footprint is:' + totalFootprint.toFixed(2) + " ton CO2e";
+          document.getElementById("totalFootprint").innerHTML = 'Your footprint is: '+ '<b>' + totalFootprint.toFixed(2) + '</b>'+" ton CO2e";
 
-          var ctx = document.getElementById("myChart").getContext('2d');
+          // distribution chart
+          var ctx = document.getElementById("distributionChart").getContext('2d');
 
-          var myChart = new Chart(ctx, {
+          var distributionChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
               labels: labels, // Add data labels
               datasets: [{
                 data: data, // Specify the data values array
 
-                borderColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', '#228B22', ], // Add custom color border 
-                backgroundColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896','#228B22'], // Add custom color background (Points and Fill)
+                borderColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', '#228B22',], // Add custom color border 
+                backgroundColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', '#228B22'], // Add custom color background (Points and Fill)
                 borderWidth: 1 // Specify bar border width
               }]
             },
@@ -393,6 +433,41 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           });
 
+
+
+          // country comparison chart ==============================
+          let countryEmissionData = [0.03, 23.75, 35.6];
+          countryEmissionData.splice(1, 0, totalFootprint); // insert individual footprint
+          var horizontalBarChart = new Chart(horizontalBarChartCanvas, {
+            type: 'bar',
+            data: {
+              labels: ["Greenland", "You", "UAE", "Qatar"],
+              datasets: [{
+                data: countryEmissionData,
+                backgroundColor: ["#8B0000", "#8B0000", "#8B0000", "#8B0000"],
+              }]
+            },
+            type: 'bar',
+            options: {
+              indexAxis: 'y',
+              elements: {
+                bar: {
+                  borderWidth: 2,
+                }
+              },
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: 'tons of Co2 emitted per person'
+                }
+              }
+            },
+          });
+
           // alert("Survey completed!");
         }
       }
@@ -400,6 +475,129 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Please select an option!");
     }
   }
+
+  // showPledges
+  document.getElementById('pledgeBtn').addEventListener('click', () => {
+    showPledges();
+  })
+
+  document.getElementById('pledgeBtnNav').addEventListener('click', () => {
+    showPledges();
+  })
+
+  // show Learn More resources
+  document.getElementById('learnMoreBtn').addEventListener('click', () => {
+    showLearnMore();
+  })
+
+  // show about section
+  document.getElementById('aboutBtn').addEventListener('click', () => {
+    showAboutSection();
+  })
+
+
+  function showPledges() {
+    document.getElementById("resultsPage").style.display = "none";
+    document.getElementById("learnMoreSection").style.display = "none";
+    document.getElementById("questionContainer").style.display = "none";
+    document.getElementById("aboutSection").style.display = "none";
+    document.getElementById("pledgeSection").style.display = "block";
+    getData();
+  }
+
+  function showAboutSection(){
+    document.getElementById("pledgeSection").style.display = "none";
+    document.getElementById("questionContainer").style.display = "none";
+    document.getElementById("learnMoreSection").style.display = "none";
+    document.getElementById("resultsPage").style.display = "none";
+    document.getElementById("aboutSection").style.display = "block";
+  }
+
+  function showLearnMore() {
+    document.getElementById("resultsPage").style.display = "none";
+    document.getElementById("questionContainer").style.display = "none";
+    document.getElementById("pledgeSection").style.display = "none";
+    document.getElementById("aboutSection").style.display = "none";
+    document.getElementById("learnMoreSection").style.display = "block";
+
+    document.getElementById("resources").innerHTML = "";
+    images = ["https://iili.io/HULQoYb.md.png", "https://i.postimg.cc/y823TgsD/cop28.png",
+              "https://i.postimg.cc/pdZZcJT0/nyu.png", "https://i.postimg.cc/jSRvH1qW/washing.png",
+              "https://i.postimg.cc/YqdLPDfL/meat.png","https://i.postimg.cc/KvCx4nms/nytimefoot.png",
+              "https://i.postimg.cc/7YSwG5bH/fashion.png","https://i.postimg.cc/T1CjCd3p/carpooling.png",
+              "https://i.postimg.cc/Fswkmd8h/fastshipping.png"
+
+
+
+            ]
+    links = ["https://www.constellation.com/energy-101/energy-innovation/how-to-reduce-your-carbon-footprint.html", "https://www.cop28.com/en/",
+            "https://livableplanet.nyuad.nyu.edu/category/cop28/",
+          "https://gulfnews.com/uae/environment/why-you-shouldnt-iron-or-wash-your-clothes-from-12pm-to-6pm-1.2050368",
+        "https://www.thenationalnews.com/uae/environment/calls-to-rethink-uae-diet-as-un-study-shows-environmental-damage-of-eating-meat-1.687778",
+        "https://www.nytimes.com/guides/year-of-living-better/how-to-reduce-your-carbon-footprint",
+        "https://www.worldbank.org/en/news/feature/2019/09/23/costo-moda-medio-ambiente",
+        "https://www.arabianbusiness.com/gcc/uae/430277-abu-dhabi-launches-carpooling-system-to-help-reduce-car-numbers",
+        "https://depts.washington.edu/sctlctr/news-events/in-the-news/fast-shipping-isn%E2%80%99t-great-environment-%E2%80%94-7-ways-cut-carbon-footprint-your"
+
+
+      ]
+
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i];
+      let link = links[i];
+      const root = document.createElement('div');
+      const content =
+        `<div class="card">
+      <div class="inner-card">
+        <div class="img-wrapper">
+          <img src= ${image} alt="">
+        </div>
+        <div class="content">
+          <a href=${link} target="_blank">View</a>
+        </div>
+      </div>
+    </div>`;
+
+      root.innerHTML = content
+      document.getElementById("resources").append(root);
+    }
+
+  }
+
+  async function getData() {
+    const response = await fetch('/api');
+    const data = await response.json();
+
+    // show the on the html pages
+    document.getElementById("pledges").style.display = "block";
+    document.getElementById("pledges").innerHTML = "";
+
+    for (let i = data.length - 1; i >= 0; i--) {
+      const item = data[i];
+      let image = "https://source.unsplash.com/640x960/?nature,plant"
+      const root = document.createElement('div');
+      const content =
+        `<div class="card">
+      <div class="inner-card">
+        <div class="img-wrapper">
+          <img src= ${image} alt="">
+        </div>
+        <div class="content">
+          <h1> 👑 ${item.name}</h1>
+          <p> 🤞 ${item.pledgeSubmitted}</p>
+          <p> ⏰ ${item.timestamp}</p>
+        </div>
+      </div>
+    </div>`;
+
+      root.innerHTML = content
+      document.getElementById("pledges").append(root);
+    }
+
+    console.log(data);
+
+  }
+
   document
     .getElementById("prevBtn")
     .addEventListener("click", prevQuestion);

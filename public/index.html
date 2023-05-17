@@ -1,55 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+        integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&family=Poppins:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* body */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fffdf5;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .topnav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        .topnav .icon {
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav a:not(:first-child) {
+                display: none;
+            }
+
+            .topnav a.icon {
+                float: right;
+                display: block;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav.responsive {
+                position: relative;
+            }
+
+            .topnav.responsive .icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+        }
+
+        /*Quote Styling*/
+        #quote {
+            margin-top: 5%;
+            font-family: 'Special Elite', cursive;
+            background: #fffdf5;
+            color: #3f3f5a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        blockquote {
+            font-weight: 100;
+            font-size: 1rem;
+            max-width: 600px;
+            line-height: 1.4;
+            position: relative;
+            margin: 0;
+            padding: .5rem;
+        }
+
+        blockquote:before,
+        blockquote:after {
+            position: absolute;
+            color: #f1efe6;
+            font-size: 8rem;
+            width: 4rem;
+            height: 4rem;
+        }
+
+        blockquote:before {
+            content: '“';
+            left: -5rem;
+            top: -2rem;
+        }
+
+        blockquote:after {
+            content: '”';
+            right: -5rem;
+            bottom: 1rem;
+        }
+
+        cite {
+            line-height: 3;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5rem;
+            padding: 1rem;
+            font-size: 18px;
+        }
+
+        #questionContainer {
+            display: flex;
+            text-align: center;
+            font-size: 20px;
+            flex-direction: column;
+            margin: 5rem;
+            align-items: center;
+            box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        }
+
+        #navigationBtns {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+
+        #resultsBtns {
+            margin-top: 5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #question {
+            margin-left: 2rem;
+            height: 90px;
+        }
+
+        label {
+            padding: 0.5rem;
+            margin: 0.5rem;
+            border-radius: 5px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        /* button */
+        .button-3 {
+            appearance: none;
+            background-color: #2ea44f;
+            border: 1px solid rgba(27, 31, 35, .15);
+            border-radius: 6px;
+            box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            padding: 6px 16px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .button-3:focus:not(:focus-visible):not(.focus-visible) {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .button-3:hover {
+            background-color: #2c974b;
+        }
+
+        .button-3:focus {
+            box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+            outline: none;
+        }
+
+        .button-3:disabled {
+            background-color: #94d3a2;
+            border-color: rgba(27, 31, 35, .1);
+            color: rgba(255, 255, 255, .8);
+            cursor: default;
+        }
+
+        .button-3:active {
+            background-color: #298e46;
+            box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+        }
+
+        /*Pledges Styling*/
+        #pledgeSection {
+            margin: 8rem;
+        }
+
+        .card {
+            flex-basis: 33.33333%;
+            padding: 15px;
+        }
+
+        .inner-card {
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .1)
+        }
+
+        .img-wrapper {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 10px;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .content {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .content h1 {
+            font-weight: 900;
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .content p {
+            font-size: 20px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /*form*/
+        #myForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+        }
+
+        #name {
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+
+        /* learn more section */
+        #learnMoreSection {
+            margin: 8rem;
+        }
+
+        #learnMoreSection a{
+            color:#2c974b;
+        }
+
+        footer {
+            background-color: #333;
+            font-size: 15px;
+            color: white;
+            height: 30px;
+            text-align: center;
+        }
+
+        footer,
+        a {
+            color: aqua;
+        }
+
+        #aboutSection {
+            margin-left: 2rem;
+        }
+
+        #aboutSection a {
+            color: #2c974b;
+        }
+    </style>
     <title>Footprint Indicator Platform</title>
     <script src="./script.js"></script>
+
 </head>
+
 <body>
+    <!--Navbar-->
+    <div class="topnav" id="myTopnav">
+        <a id="home" href="#questionContainer" class="active">Home🌱</a>
+        <a id="pledgeBtnNav" href="#pledgeSection">Pledges</a>
+        <a id="learnMoreBtn" href="#learnMoreSection">Learn More</a>
+        <a id="aboutBtn" href="#aboutSection">About</a>
+        <a id="hamburger" href="javascript:void(0);" class="icon">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <h1 class="center-text">Imagining Possibilities: Footprint Indicator</h1>
+    <!--Quote-->
+    <div id="quote">
+        <blockquote>When future generations look back upon the Great Derangement, they will certainly blame the leaders
+            and politicians of this time for their failure to address the climate crisis. But they may well hold artists
+            and writers equally culpable—for the imagining of possibilities is not, after all, the job of politicians
+            and bureaucrats.</blockquote>
+        <cite> - Amitav Ghosh -</cite>
+    </div>
     <div id="questionContainer">
-        <h1>Footprint Indicator</h1>
-         <p>Answer the questions below to know your carbon footprint!</p>
+        <p>Answer the questions below to know your carbon footprint!</p>
         <h2 id="sectorName">Sector</h2>
         <h3 id="questionsLeftForSector">Questions left for sector</h3>
         <div id="question"></div>
         <div id="options"></div>
-        <button id="prevBtn">Previous</button>
-        <button id="nextBtn">Next</button>
-      </div> 
+        <div id="navigationBtns">
+            <div id="nextPrevBtn">
+                <button class="button-3" id="prevBtn">Prev</button>
+                <button class="button-3" id="nextBtn">Next</button>
+            </div>
+        </div>
+    </div>
 
-      <section id="resultsPage">
-        <h1>Results</h1>
-       
+    <section id="resultsPage">
         <div id="resultsContainer">
+            <h1>Results</h1>
             <p>Here are your results!</p>
             <div id="totalFootprint"></div>
         </div>
-        <p>Distribution: Hover to see amount!</p>
+        <h3 class="center-text">Distribution: Hover to see amount!</h3>
         <div id="results">
-            <canvas width="500" id="myChart"></canvas>
+            <canvas width="500" id="distributionChart"></canvas>
         </div>
-        <!-- <button id="restartBtn">Restart</button> -->
-      </section>
-      
-      <!--Pledge Submission-->
-      <h1>Submit a Pledge towards Net Zero Today !</h1>
-      <form id="myForm">
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
-  
-          <label for="comment">Pledge:</label>
-          <input type="text" id="comment" name="comment" required />
-  
-          <button type="submit">Submit</button>
-      </form>
-  
+        <h3 class="center-text">Your emissions against the highest and lowest carbon emitters and the UAE</h3>
+        <p class="center-text">Be a Greenlander!</p>
+        <div>
+            <canvas width="500" id="horizontalBarChartCanvas"></canvas>
+        </div>
+        <div id="resultsBtns">
+            <div id="downResBtn">
+                <button class="button-3" id="restartBtn">Take the Quiz Again</button>
+                <button class="button-3" id="downloadResultsBtn">Download Results</button>
+            </div>
+            <div class="makePledge">
+                <button class="button-3" id="pledgeBtn">Make a Pledge towards Net Zero!</button>
+            </div>
+        </div>
+    </section>
+
+    <!--Pledge Submission-->
+    <section id="pledgeSection">
+        <h1>Submit a Pledge towards Net Zero Today !</h1>
+        <form id="myForm">
+            <input type="text" id="name" name="name" placeholder="My name is ..." required />
+            <textarea name="comment" id="comment" cols="30" rows="10">I pledge to ...</textarea>
+            <button class="button-3" type="submit">Submit</button>
+        </form>
+
         <div id="pledges">
-            <h2>Pledges</h2>
-            <ul id="list"></ul>
         </div>
-      <!-- <button onclick="handleButtonClick()">Read</button> -->
+    </section>
+
+    <!--learnMore Section-->
+    <section id="learnMoreSection">
+        <h1>Reducing your footprint!</h1>
+        <p>Learn about sustainability efforts and how to reduce your footprint.</p>
+        <div id="resources">
+
+        </div>
+    </section>
+
+    <!--About Section-->
+    <section id="aboutSection">
+        <h2>Why are you here?</h2>
+        <p>The imagining of possibilities to address climate change is not only the job of politicians or decision
+            makers in closed door rooms but also you and me! </p>
+        <h2>What is the problem we are trying to solve?</h2>
+        <p>(1) No transperancy on how online calculators compute carbon footprint</p>
+        <p>(2) Computation are offered based on data from the Global North</p>
+        <h2>How is Footprint Indicator Platform any different?</h2>
+        <p>* Is transparent, all the code on github linked below</p>
+        <p>* Computation specifically tailored to the UAE (considered Global South)</p>
+        <p>* Shows how much various sectors contribute to co2 emissions</p>
+        <p>* Questions the lifestyle of the people </p>
+        <h2>Our goals for you</h2>
+        <p>*Get to know your footprint by taking the lifestyle quiz </p>
+        <p>* Understand your footprint results through visualizations</p>
+        <p>* Download your results for later</p>
+        <p>* Take action now by pledging a lifestyle change</p>
+        <p>* Learn more about climate efforts and lifestyle changes by visiting the learn more tab</p>
+        <p>* Be motivated to start something new with your skills towards Net Zero!</p>
+        <p>* Contribute to this project as a designer, environmentalist, programmer - all are welcome - <a
+                href="https://github.com/eric-asare/footprint_indicator_platform">github</a></p>
+        <p>* Share the link to this site with your friends</p>
+        <h2>The Process</h2>
+        <p>Over 100hours and 1000 lines of code went into this project! </p>
+        <p>The steps involved:</p>
+        <p>* Refining the idea</p>
+        <img src="https://i.ibb.co/4T28qb6/Idea.png" alt="">
+        <p>* Making sketches of the platform</p>
+        <img src="https://i.ibb.co/Br0tP1j/sketches1.png" alt="">
+        <img src="../images/process/sketches2.png" alt="">
+        <p>* Desigining the lifestyle questions</p>
+        <img src="https://i.ibb.co/f2V5q6M/lifestyle.png" alt="">
+        <p>* Developing the computation for calculating the footprint</p>
+        <img src="https://i.ibb.co/tsfDt58/computation.png" alt="">
+        <p>* Building visualizations to help you understand your carbon footprint results</p>
+        <p>* Adding a pledge page powered by a persistent database and an API server so you can take an action now</p>
+        <p>* Adding more resources on the learn more tab for you</p>
+        <img src="https://i.ibb.co/0y73C8P/resources.png" alt="">
+        <p>* Creating this page so you understand what the project is about</p>
+        <img src="https://i.ibb.co/tDwSTDv/codingscreen.png" alt="">
+        </div>
+    </section>
+    <footer>
+        <p>Developed with 💚 by <a href="https://www.linkedin.com/in/eric-asare/">Eric Asare </a>©️ 2023 | Supervised by
+            👩‍🏫 <a
+                href="https://nyuad.nyu.edu/en/academics/divisions/arts-and-humanities/faculty/masha-kirasirova.html">
+                Dr. Masha Kirasirova</a></p>
+    </footer>
+
+
+    <!-- <button onclick="handleButtonClick()">Read</button> -->
 </body>
+
 </html>
